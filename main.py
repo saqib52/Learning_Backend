@@ -259,21 +259,40 @@ class UserRes(BaseModel):
 def get_users( user_id:int):
     return {"id": user_id,
         "username": "saqib",
-        "email": "saqib@email.com"
+        "email": "saqib@email.com"}
+
+# Example #2:
+# Email validation
+
+from typing import Optional
+from pydantic import BaseModel, EmailStr
+
+# ----------------------------
+# 📥 REQUEST BODY MODEL
+# ----------------------------
+class UserCreate(BaseModel):
+    name: str
+    email: EmailStr
+    age: int
+    password: str
+    bio: Optional[str] = None
+
+# ----------------------------
+# 📥 RESPONSE BODY MODEL
+# ----------------------------
+
+class UserResponse(BaseModel):
+    name: str
+    email: EmailStr
+    age: int
+
+@app.post("/userx",response_model= UserResponse)
+def create_user(user: UserCreate):
+    return {"name": user.name,
+        "email": user.email,
+        "age": user.age,
+        'password': user.password
+        }
 
 
 
-
-'''Status Codes (Professional Communication)
-Right now everything returns 200 OK.That’s not correct.
-
-| Action         | Correct Status |
-| -------------- | -------------- |
-| GET success    | 200            |
-| POST create    | 201            |
-| DELETE success | 204            |
-| Bad input      | 400            |
-| Unauthorized   | 401            |
-| Not found      | 404            |
-'''
-# Setting Status Code in FastAPI
