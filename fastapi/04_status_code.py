@@ -40,16 +40,29 @@ class UserResponse(BaseModel):
     email: EmailStr
     age: int
 
-@app.post("/user", status_code= status.HTTP_201_CREATED)
+@app.post("/users", status_code= status.HTTP_201_CREATED, response_model=UserResponse) 
 def create_user(user: CreateUser):
-    return user
+    if user.age < 18:
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="user must be atleast 18 year old")
+    return{"name":user.name,
+           "age":user.age,
+           "email": user.email
+           }
 
-@app.get("/users/{user_id}", response_model= UserResponse )
-def create_user(user: CreateUser, user_id: int):
+
+
+@app.get("/users/{user_id}",response_model= UserResponse )
+def create_user(user_id: int):
     if user_id < 1:
         raise HTTPException(status_code=404, detail="User not found")
-    else: 
-        return {
-        "user": user,
-        "user_id": user_id 
+    return {
+        "name": "Saqib",
+        "age": 30,
+        "email": "saqibjawad52@gmail.com"
     }
+
+# # FastAPI:
+# # Stops execution
+# # Returns proper error JSON
+# # Sets correct status code
+# This is clean and consistent.
